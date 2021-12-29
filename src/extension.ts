@@ -3,6 +3,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as os from "os";
+import * as fs from "fs-extra";
 
 function registerCommand(
   context: vscode.ExtensionContext,
@@ -20,15 +21,33 @@ function getWorkspacePath() {
   return undefined;
 }
 
+// Resolves the home tilde.
 function resolveHome(filepath: string | undefined) {
   if (path === null || !filepath) {
     return "";
   }
 
-  if (filepath[0] === '~') {
+  if (filepath[0] === "~") {
     return path.join(os.homedir(), filepath.slice(1));
   }
   return filepath;
+}
+
+// Create the given file if it doesn't exist
+function createFilePromise(filePath: string) {
+  return new Promise((resolve, reject) => {
+    if (filePath === null) {
+      reject();
+    }
+    // fs-extra
+    fs.ensureFile(filePath)
+      .then(() => {
+        resolve(filePath);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 function playground() {
@@ -49,11 +68,39 @@ function playground() {
 
   vscode.window.showInformationMessage("Hello World from workspace-notes!");
 }
+
 function newNote() {
-  const config = vscode.workspace.getConfiguration('vsnotes');
-  const noteFolder = resolveHome(config.get('defaultNotePath'));
-  
-  vscode.window.showInformationMessage("noteFolder = " + noteFolder);
+  const config = vscode.workspace.getConfiguration("workspaceNotes");
+  const noteFolder = resolveHome(config.get("defaultNotePath"));
+
+  vscode.window
+    .showInputBox({
+      prompt: `Note path (relate to note repository root)`,
+      value: "",
+    })
+    .then((notePath) => {
+      // Check for aborting the new note dialog
+      if (notePath === null) {
+        vscode.window.showErrorMessage("New note creation aborted.");
+        return;
+      }
+
+      // Check for empty string but confirmation in the new note dialog
+      if (notePath === "" || !notePath) {
+        vscode.window.showErrorMessage("New note name should not be empty.");
+        return;
+      }
+
+      let noteFullPath = path.join(noteFolder, notePath);
+      fs.createFile(noteFullPath).then(() => {
+        vscode.window.showTextDocument(vscode.Uri.file(noteFullPath), {
+          preserveFocus: false,
+          preview: false,
+        });
+      }).catch(err => {
+        vscode.window.showErrorMessage(`Note ${noteFullPath} exists.`);
+      });
+    });
 }
 
 // this method is called when your extension is activated
