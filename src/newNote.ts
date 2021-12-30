@@ -1,32 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
-import * as matter from "gray-matter";
-import { getWorkspacePath, noteRepoPath, showFile } from "./util";
-
-function addWorkspaceTagIfNo(filePath: string) {
-  let s = fs.readFileSync(filePath, "utf-8");
-  let obj = matter(s);
-  let workspacePath = getWorkspacePath();
-  if (workspacePath === undefined) {
-    return;
-  }
-  if ("workspace" in obj.data) {
-    if (obj.data.workspace instanceof Array) {
-      if (!obj.data.workspace.includes(workspacePath)) {
-        obj.data.workspace.push(workspacePath);
-      }
-    } else {
-      if (workspacePath !== obj.data.workspace) {
-        obj.data.workspace = [obj.data.workspace, workspacePath];
-      }
-    }
-  } else {
-    obj.data.workspace = getWorkspacePath();
-  }
-  s = matter.stringify(obj.content, obj.data);
-  fs.outputFileSync(filePath, s);
-}
+import { addWorkspaceTagIfNo, noteRepoPath, showFile } from "./util";
 
 function createNewNote() {
   return (realtiveToBase: string | undefined) => {

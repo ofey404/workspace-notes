@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import * as fs from "fs-extra";
 import * as os from "os";
+import * as matter from "gray-matter";
 
 export function showFile(path: string) {
   vscode.window.showTextDocument(vscode.Uri.file(path), {
@@ -44,6 +46,36 @@ export function resolveHome(filepath: string | undefined) {
     return path.join(os.homedir(), filepath.slice(1));
   }
   return filepath;
+}
+
+function pushTagIfNo(
+  obj: matter.GrayMatterFile<matter.Input>,
+  tag: string,
+  val: string
+) {
+  if (tag in obj.data) {
+    if (obj.data[tag] instanceof Array) {
+      if (!obj.data[tag].includes(val)) {
+        obj.data[tag].push(val);
+      }
+    } else {
+      if (val !== obj.data[tag]) {
+        obj.data[tag] = [obj.data[tag], val];
+      }
+    }
+  } else {
+    obj.data[tag] = val;
+  }
+}
+
+export function addWorkspaceTagIfNo(filePath: string) {
+  let obj = matter(fs.readFileSync(filePath, "utf-8"));
+  let workspacePath = getWorkspacePath();
+  if (workspacePath === undefined) {
+    return;
+  }
+  pushTagIfNo(obj, "workspace", workspacePath);
+  fs.outputFileSync(filePath, matter.stringify(obj.content, obj.data));
 }
 
 export function playground() {
