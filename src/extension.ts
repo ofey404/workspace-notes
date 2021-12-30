@@ -33,23 +33,6 @@ function resolveHome(filepath: string | undefined) {
   return filepath;
 }
 
-// Create the given file if it doesn't exist
-function createFilePromise(filePath: string) {
-  return new Promise((resolve, reject) => {
-    if (filePath === null) {
-      reject();
-    }
-    // fs-extra
-    fs.ensureFile(filePath)
-      .then(() => {
-        resolve(filePath);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
 function playground() {
   const notePath = vscode.workspace
     .getConfiguration("workspaceNotes")
@@ -69,6 +52,35 @@ function playground() {
   vscode.window.showInformationMessage("Hello World from workspace-notes!");
 }
 
+function showTextDocumentCallback(noteFullPath: string) {
+  return () => {
+    vscode.window.showTextDocument(vscode.Uri.file(noteFullPath), {
+      preserveFocus: false,
+      preview: false,
+    });
+  };
+}
+
+function createNewNoteCallback(noteFolder: string) {
+  return (notePath: string | undefined) => {
+    // Check for aborting the new note dialog
+    if (notePath === null) {
+      vscode.window.showErrorMessage("New note creation aborted.");
+      return;
+    }
+
+    // Check for empty string but confirmation in the new note dialog
+    if (notePath === "" || !notePath) {
+      vscode.window.showErrorMessage("New note name should not be empty.");
+      return;
+    }
+
+    let noteFullPath = path.join(noteFolder, notePath);
+    fs.ensureFile(noteFullPath)
+      .then(showTextDocumentCallback(noteFullPath));
+  };
+}
+
 function newNote() {
   const config = vscode.workspace.getConfiguration("workspaceNotes");
   const noteFolder = resolveHome(config.get("defaultNotePath"));
@@ -78,29 +90,7 @@ function newNote() {
       prompt: `Note path (relate to note repository root)`,
       value: "",
     })
-    .then((notePath) => {
-      // Check for aborting the new note dialog
-      if (notePath === null) {
-        vscode.window.showErrorMessage("New note creation aborted.");
-        return;
-      }
-
-      // Check for empty string but confirmation in the new note dialog
-      if (notePath === "" || !notePath) {
-        vscode.window.showErrorMessage("New note name should not be empty.");
-        return;
-      }
-
-      let noteFullPath = path.join(noteFolder, notePath);
-      fs.createFile(noteFullPath).then(() => {
-        vscode.window.showTextDocument(vscode.Uri.file(noteFullPath), {
-          preserveFocus: false,
-          preview: false,
-        });
-      }).catch(err => {
-        vscode.window.showErrorMessage(`Note ${noteFullPath} exists.`);
-      });
-    });
+    .then(createNewNoteCallback(noteFolder));
 }
 
 // this method is called when your extension is activated
