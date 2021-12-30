@@ -1,6 +1,21 @@
-# workspace-notes README
+# workspace-notes
 
-Workspace-notes is a 
+Quick open notes related to current workspace, while manage them in a single repository.
+
+> Want to take some notes about current project?
+> 
+> - Choice 1: Put note file directly under project path.
+>   - Problem: They pollute version control.
+>   - Besides, Notes scattering everywhere are hard to manage and read later.
+> - Choice 2: Manage them in a centralized repository, or a stand alone note applciation.
+>   - Problem: Repetitively open another project/application, and find related note.
+>   - Also have to manage an extra map (note -> workspace).
+
+If you have similar unsatisifaction like me, `workspace-notes` come to your rescue.
+
+TODO: Under construction.
+
+----
 
 ## Features
 
