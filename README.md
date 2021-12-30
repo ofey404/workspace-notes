@@ -1,17 +1,25 @@
 # workspace-notes
 
-Quick open notes related to current workspace, while manage them in a single repository.
+Workspace oriented note plugin. Quick open notes related to current workspace, while managing them in a single repository.
 
-> Want to take some notes about current project?
+> I always feel unsatisified while taking notes about code projects:
 > 
 > - Choice 1: Put note file directly under project path.
 >   - Problem: They pollute version control.
->   - Besides, Notes scattering everywhere are hard to manage and read later.
+>   - Besides, it's a pain to accumulate or read later.
 > - Choice 2: Manage them in a centralized repository, or a stand alone note applciation.
 >   - Problem: Repetitively open another project/application, and find related note.
 >   - Also have to manage an extra map (note -> workspace).
 
 If you have similar unsatisifaction like me, `workspace-notes` come to your rescue.
+
+```
+TODO: Quick start
+```
+
+All notes are managed in a single repository, as plain markdown file.
+
+No black magic, minimum assumption. Only rely on tag `workspace: /path/to/it` contained in every markdown file, so you can place and move them freely.
 
 TODO: Under construction.
 
