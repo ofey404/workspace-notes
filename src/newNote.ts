@@ -9,22 +9,22 @@ function ensureAndShow(file: string) {
   });
 }
 
-function createNewNoteCallback(noteFolder: string) {
-  return (notePath: string | undefined) => {
+function createNewNote() {
+  return (realtiveToBase: string | undefined) => {
     // Check for aborting the new note dialog
-    if (notePath === null) {
+    if (realtiveToBase === null) {
       vscode.window.showErrorMessage("New note creation aborted.");
       return;
     }
 
     // Check for empty string but confirmation in the new note dialog
-    if (notePath === "" || !notePath) {
+    if (realtiveToBase === "" || !realtiveToBase) {
       vscode.window.showErrorMessage("New note name should not be empty.");
       return;
     }
 
-    let noteFullPath = path.join(noteFolder, notePath);
-    ensureAndShow(noteFullPath);
+    let fullPath = path.join(noteRepoPath(), realtiveToBase);
+    ensureAndShow(fullPath);
   };
 }
 
@@ -34,5 +34,5 @@ export function newNote() {
       prompt: `Note path (relate to note repository root)`,
       value: "",
     })
-    .then(createNewNoteCallback(noteRepoPath()));
+    .then(createNewNote());
 }
