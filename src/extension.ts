@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import {newNote} from "./newNote";
-import {listWorkspaceNotes} from "./listWorkspaceNotes";
+import { newNote } from "./newNote";
+import { listAllNotes } from "./listAllNotes";
 
 function registerCommand(
   context: vscode.ExtensionContext,
@@ -16,7 +16,7 @@ function registerCommand(
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, "workspace-notes.newNote", newNote);
-  registerCommand(context, "workspace-notes.listWorkspaceNotes", listWorkspaceNotes);
+  registerCommand(context, "workspace-notes.listAllNotes", listAllNotes);
 }
 
 // this method is called when your extension is deactivated

@@ -48,6 +48,8 @@ export function resolveHome(filepath: string | undefined) {
   return filepath;
 }
 
+// ================ Tag management ==================================
+
 function pushTagIfNo(
   obj: matter.GrayMatterFile<matter.Input>,
   tag: string,
@@ -77,6 +79,9 @@ export function addWorkspaceTagIfNo(filePath: string) {
   pushTagIfNo(obj, "workspace", workspacePath);
   fs.outputFileSync(filePath, matter.stringify(obj.content, obj.data));
 }
+
+
+// ================ Playground ======================================
 
 export function playground() {
   const notePath = vscode.workspace

@@ -11,7 +11,7 @@
   ],
   "activationEvents": [
     "onCommand:workspace-notes.newNote",
-    "onCommand:workspace-notes.listWorkspaceNotes"
+    "onCommand:workspace-notes.listAllNotes"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -21,8 +21,8 @@
         "title": "Workspace Notes: Create a New Note"
       },
       {
-        "command": "workspace-notes.listWorkspaceNotes",
-        "title": "Workspace Notes: List workspace notes"
+        "command": "workspace-notes.listAllNotes",
+        "title": "Workspace Notes: List all notes"
       }
     ],
     "configuration": {

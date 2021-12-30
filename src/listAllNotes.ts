@@ -3,7 +3,7 @@ import * as path from "path";
 import * as klaw from "klaw";
 import { showFile } from "./util";
 
-import { getWorkspacePath, noteRepoPath, ignorePattern } from "./util";
+import { noteRepoPath, ignorePattern } from "./util";
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
@@ -69,8 +69,7 @@ function sortAndShowQuickPick(files: Array<klaw.Item>) {
   };
 }
 
-export function listWorkspaceNotes() {
-  let workspacePath = getWorkspacePath();
+export function listAllNotes() {
   let files: klaw.Item[] = [];
 
   klaw(noteRepoPath())
