@@ -1,70 +1,81 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as klaw from "klaw";
-import { getWorkspacePath, noteFolder, ignorePattern } from "./util";
+import * as matter from "gray-matter";
+import { showFile } from "./util";
+
+import { getWorkspacePath, noteRepoPath, ignorePattern } from "./util";
+
+function removePrefix(path: string, prefix: string) {
+  return path.slice(prefix.length + 1, path.length);
+}
+
+function collectTo(files: Array<klaw.Item>) {
+  return (item: klaw.Item) => {
+    const relativePath = removePrefix(item.path, noteRepoPath());
+    if (!ignorePattern().test(relativePath) && !item.stats.isDirectory()) {
+      files.push(item);
+    }
+  };
+}
+
+function errorScanningFile() {
+  return (err: klaw.Event, item: klaw.Item) => {
+    vscode.window.showErrorMessage(
+      `Error ${err} occurred while scanning file: ${item} `
+    );
+  };
+}
+
+function errorShowQuickPick() {
+  return (err: any) => {
+    vscode.window.showErrorMessage(
+      `Error ${err} occurred while showing quickpick.`
+    );
+  };
+}
+
+function byMtime(a: klaw.Item, b: klaw.Item) {
+  const aTime = new Date(a.stats.mtime);
+  const bTime = new Date(b.stats.mtime);
+  if (aTime > bTime) {
+    return -1;
+  } else if (aTime < bTime) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function toRelativePath(f: klaw.Item) {
+  return removePrefix(f.path, noteRepoPath());
+}
+
+function showFileIfValid() {
+  return (relativePath: string | undefined) => {
+    if (relativePath !== null && relativePath) {
+      let candidate = path.join(noteRepoPath(), relativePath);
+      showFile(candidate);
+    }
+  };
+}
+
+function sortAndShowQuickPick(files: Array<klaw.Item>) {
+  return () => {
+    const relativePaths = files.sort(byMtime).map(toRelativePath);
+
+    vscode.window
+      .showQuickPick(relativePaths)
+      .then(showFileIfValid(), errorShowQuickPick());
+  };
+}
 
 export function listWorkspaceNotes() {
   let workspacePath = getWorkspacePath();
-  // TODO: First implement list all notes.
-
-  const noteFolderLen = noteFolder().length;
   let files: klaw.Item[] = [];
 
-  // Using klaw, recursively iterate through notes directory.
-  klaw(noteFolder())
-    .on("data", (item) => {
-      const relativePath = item.path.slice(
-        noteFolder().length + 1,
-        item.path.length
-      );
-      if (!ignorePattern().test(relativePath) && !item.stats.isDirectory()) {
-        files.push(item);
-      }
-    })
-    .on("error", (err: klaw.Event, item: klaw.Item) => {
-      vscode.window.showErrorMessage(
-        "Error occurred while scanning file: " + item
-      );
-      console.error("Error while walking notes folder: ", item, err);
-    })
-    .on("end", () => {
-      // Sort files and generate path array
-      files = files.sort(function (a, b) {
-        const aTime = new Date(a.stats.mtime);
-        const bTime = new Date(b.stats.mtime);
-        if (aTime > bTime) {
-          return -1;
-        } else if (aTime < bTime) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-      const shortPaths = [];
-      for (let j = 0; j < files.length; j++) {
-        shortPaths.push(
-          files[j].path.slice(noteFolderLen + 1, files[j].path.length)
-        );
-      }
-
-      vscode.window.showQuickPick(shortPaths).then(
-        (res) => {
-          if (res !== null && res) {
-            vscode.window
-              .showTextDocument(vscode.Uri.file(path.join(noteFolder(), res)))
-              .then(
-                (file) => {
-                  console.log("Opening file ", res);
-                },
-                (err) => {
-                  console.error(err);
-                }
-              );
-          }
-        },
-        (err) => {
-          console.error(err);
-        }
-      );
-    });
+  klaw(noteRepoPath())
+    .on("data", collectTo(files))
+    .on("error", errorScanningFile())
+    .on("end", sortAndShowQuickPick(files));
 }

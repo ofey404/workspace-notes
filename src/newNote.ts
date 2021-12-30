@@ -1,15 +1,12 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
-import { noteFolder } from "./util";
+import { noteRepoPath, showFile } from "./util";
 
-function showTextDocumentCallback(noteFullPath: string) {
-  return () => {
-    vscode.window.showTextDocument(vscode.Uri.file(noteFullPath), {
-      preserveFocus: false,
-      preview: false,
-    });
-  };
+function ensureAndShow(file: string) {
+  fs.ensureFile(file).then(() => {
+    showFile(file);
+  });
 }
 
 function createNewNoteCallback(noteFolder: string) {
@@ -27,7 +24,7 @@ function createNewNoteCallback(noteFolder: string) {
     }
 
     let noteFullPath = path.join(noteFolder, notePath);
-    fs.ensureFile(noteFullPath).then(showTextDocumentCallback(noteFullPath));
+    ensureAndShow(noteFullPath);
   };
 }
 
@@ -37,5 +34,5 @@ export function newNote() {
       prompt: `Note path (relate to note repository root)`,
       value: "",
     })
-    .then(createNewNoteCallback(noteFolder()));
+    .then(createNewNoteCallback(noteRepoPath()));
 }

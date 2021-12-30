@@ -2,11 +2,18 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as os from "os";
 
+export function showFile(path: string) {
+  vscode.window.showTextDocument(vscode.Uri.file(path), {
+    preserveFocus: false,
+    preview: false,
+  });
+}
+
 export function config() {
   return vscode.workspace.getConfiguration("workspaceNotes");
 }
 
-export function noteFolder() {
+export function noteRepoPath() {
   return resolveHome(config().get("defaultNotePath"));
 }
 

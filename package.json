@@ -70,7 +70,9 @@
   },
   "dependencies": {
     "@types/fs-extra": "^9.0.13",
+    "@types/klaw": "^3.0.3",
     "fs-extra": "^10.0.0",
+    "gray-matter": "^4.0.3",
     "klaw": "^4.0.1"
   }
 }
