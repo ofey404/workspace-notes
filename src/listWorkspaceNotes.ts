@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as klaw from "klaw";
-import * as matter from "gray-matter";
 import { showFile } from "./util";
 
 import { getWorkspacePath, noteRepoPath, ignorePattern } from "./util";

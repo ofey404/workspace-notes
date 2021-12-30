@@ -1,12 +1,31 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
-import { noteRepoPath, showFile } from "./util";
+import * as matter from "gray-matter";
+import { getWorkspacePath, noteRepoPath, showFile } from "./util";
 
-function ensureAndShow(file: string) {
-  fs.ensureFile(file).then(() => {
-    showFile(file);
-  });
+function addWorkspaceTagIfNo(filePath: string) {
+  let s = fs.readFileSync(filePath, "utf-8");
+  let obj = matter(s);
+  let workspacePath = getWorkspacePath();
+  if (workspacePath === undefined) {
+    return;
+  }
+  if ("workspace" in obj.data) {
+    if (obj.data.workspace instanceof Array) {
+      if (!obj.data.workspace.includes(workspacePath)) {
+        obj.data.workspace.push(workspacePath);
+      }
+    } else {
+      if (workspacePath !== obj.data.workspace) {
+        obj.data.workspace = [obj.data.workspace, workspacePath];
+      }
+    }
+  } else {
+    obj.data.workspace = getWorkspacePath();
+  }
+  s = matter.stringify(obj.content, obj.data);
+  fs.outputFileSync(filePath, s);
 }
 
 function createNewNote() {
@@ -24,7 +43,11 @@ function createNewNote() {
     }
 
     let fullPath = path.join(noteRepoPath(), realtiveToBase);
-    ensureAndShow(fullPath);
+
+    fs.ensureFile(fullPath).then(() => {
+      addWorkspaceTagIfNo(fullPath);
+      showFile(fullPath);
+    });
   };
 }
 
