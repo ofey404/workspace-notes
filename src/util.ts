@@ -110,17 +110,12 @@ export function hasWorkspaceTag(filePath: string) {
   let obj = matter(fs.readFileSync(filePath, "utf-8"));
   let workspacePath = getWorkspacePath();
 
-  vscode.window.showInformationMessage("filePath is: " + filePath);
-
   if (workspacePath === undefined) {
     return false;
   }
   if (hasTagPair(obj, "workspace", workspacePath)) {
     return true;
   }
-
-  vscode.window.showInformationMessage("Hastagpair passed");
-
   return false;
 }
 
