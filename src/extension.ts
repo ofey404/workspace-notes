@@ -3,6 +3,7 @@
 import * as vscode from "vscode";
 import { newNote } from "./newNote";
 import { listAllNotes } from "./listAllNotes";
+import { pickWorkspaceNote } from "./pickWorkspaceNote";
 
 function registerCommand(
   context: vscode.ExtensionContext,
@@ -17,6 +18,7 @@ function registerCommand(
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, "workspace-notes.newNote", newNote);
   registerCommand(context, "workspace-notes.listAllNotes", listAllNotes);
+  registerCommand(context, "workspace-notes.pickWorkspaceNote", pickWorkspaceNote);
 }
 
 // this method is called when your extension is deactivated

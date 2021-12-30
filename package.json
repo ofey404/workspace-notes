@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:workspace-notes.newNote",
-    "onCommand:workspace-notes.listAllNotes"
+    "onCommand:workspace-notes.listAllNotes",
+    "onCommand:workspace-notes.pickWorkspaceNote"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,6 +24,10 @@
       {
         "command": "workspace-notes.listAllNotes",
         "title": "Workspace Notes: List all notes"
+      },
+      {
+        "command": "workspace-notes.pickWorkspaceNote",
+        "title": "Workspace Notes: Pick a workspace note to open"
       }
     ],
     "configuration": {

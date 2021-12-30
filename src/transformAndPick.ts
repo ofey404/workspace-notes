@@ -56,22 +56,29 @@ function quickPickRelativePath(
 ) {
   const relativePaths = files.map(toRelativePath);
 
+  if (relativePaths.length === 1) {
+    let candidate = path.join(noteRepoPath(), relativePaths[0]);
+    showFile(candidate);
+    return;
+  }
+
   vscode.window
     .showQuickPick(relativePaths, options)
     .then(showFileIfValid(), errorShowQuickPick());
 }
 
-export const ignorePatternAndDir = new Stream.Transform({
-  objectMode: true,
-  transform: function (item, enc, next) {
-    const relativePath = toRelativePath(item);
-    if (!ignorePattern().test(relativePath) && !item.stats.isDirectory()) {
-      this.push(item);
-    }
-    next();
-  },
-});
-
+export function ignorePatternAndDir() {
+  return new Stream.Transform({
+    objectMode: true,
+    transform: function (item, enc, next) {
+      const relativePath = toRelativePath(item);
+      if (!ignorePattern().test(relativePath) && !item.stats.isDirectory()) {
+        this.push(item);
+      }
+      next();
+    },
+  });
+}
 
 export function transFormAndPick(
   transforms: internal.Transform[],

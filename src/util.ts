@@ -80,6 +80,49 @@ export function addWorkspaceTagIfNo(filePath: string) {
   fs.outputFileSync(filePath, matter.stringify(obj.content, obj.data));
 }
 
+function hasTag(obj: matter.GrayMatterFile<matter.Input>, tag: string) {
+  if (obj.data[tag] !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+function hasTagPair(
+  obj: matter.GrayMatterFile<matter.Input>,
+  tag: string,
+  val: string
+) {
+  if (hasTag(obj, tag)) {
+    if (obj.data[tag] instanceof Array) {
+      if (obj.data[tag].includes(val)) {
+        return true;
+      }
+    } else {
+      if (val === obj.data[tag]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export function hasWorkspaceTag(filePath: string) {
+  let obj = matter(fs.readFileSync(filePath, "utf-8"));
+  let workspacePath = getWorkspacePath();
+
+  vscode.window.showInformationMessage("filePath is: " + filePath);
+
+  if (workspacePath === undefined) {
+    return false;
+  }
+  if (hasTagPair(obj, "workspace", workspacePath)) {
+    return true;
+  }
+
+  vscode.window.showInformationMessage("Hastagpair passed");
+
+  return false;
+}
 
 // ================ Playground ======================================
 
