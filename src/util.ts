@@ -2,13 +2,30 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as os from "os";
 
-function getWorkspacePath() {
+export function config() {
+  return vscode.workspace.getConfiguration("workspaceNotes");
+}
+
+export function noteFolder() {
+  return resolveHome(config().get("defaultNotePath"));
+}
+
+export function ignorePattern() {
+  let patterns = config().get<Array<string>>("ignorePatterns") as Array<string>;
+  let p: string = patterns
+    .map((pattern) => {
+      return "(" + pattern + ")";
+    })
+    .join("|");
+  return new RegExp(p);
+}
+
+export function getWorkspacePath() {
   if (vscode.workspace.workspaceFolders !== undefined) {
     return vscode.workspace.workspaceFolders[0].uri.path;
   }
   return undefined;
 }
-
 
 // Resolves the home tilde.
 export function resolveHome(filepath: string | undefined) {
@@ -21,7 +38,6 @@ export function resolveHome(filepath: string | undefined) {
   }
   return filepath;
 }
-
 
 export function playground() {
   const notePath = vscode.workspace

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs-extra";
-import { resolveHome } from "./util";
+import { noteFolder } from "./util";
 
 function showTextDocumentCallback(noteFullPath: string) {
   return () => {
@@ -32,13 +32,10 @@ function createNewNoteCallback(noteFolder: string) {
 }
 
 export function newNote() {
-  const config = vscode.workspace.getConfiguration("workspaceNotes");
-  const noteFolder = resolveHome(config.get("defaultNotePath"));
-
   vscode.window
     .showInputBox({
       prompt: `Note path (relate to note repository root)`,
       value: "",
     })
-    .then(createNewNoteCallback(noteFolder));
+    .then(createNewNoteCallback(noteFolder()));
 }

@@ -33,6 +33,16 @@
           "type": "string",
           "default": "",
           "description": "Path to note repository."
+        },
+        "workspaceNotes.ignorePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "^\\."
+          ],
+          "description": "Regular expressions for file names to ignore when parsing documents in note folder."
         }
       }
     }
@@ -46,7 +56,6 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.1.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "14.x",
@@ -60,6 +69,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "fs-extra": "^10.0.0"
+    "@types/fs-extra": "^9.0.13",
+    "fs-extra": "^10.0.0",
+    "klaw": "^4.0.1"
   }
 }
