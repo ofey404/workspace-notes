@@ -1,5 +1,5 @@
-import { transFormAndPick, ignorePatternAndDir } from "./transformAndPick";
+import { transformAndPick, ignorePatternAndDir } from "./transformAndPick";
 
 export function listAllNotes() {
-  transFormAndPick([ignorePatternAndDir()]);
+  transformAndPick([ignorePatternAndDir()]);
 }

@@ -3,28 +3,17 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import { addWorkspaceTagIfNo, noteRepoPath, showFile } from "./util";
 
-function createNewNote() {
-  // TODO: a better creation experience
-  return (realtiveToBase: string | undefined) => {
-    // Check for aborting the new note dialog
-    if (realtiveToBase === null) {
-      vscode.window.showErrorMessage("New note creation aborted.");
-      return;
-    }
+function createNewNote(realtiveToBase: string | undefined) {
+  if (realtiveToBase === null || realtiveToBase === "" || !realtiveToBase) {
+    return;
+  }
 
-    // Check for empty string but confirmation in the new note dialog
-    if (realtiveToBase === "" || !realtiveToBase) {
-      vscode.window.showInformationMessage("New note name should not be empty.");
-      return;
-    }
+  let fullPath = path.join(noteRepoPath(), realtiveToBase);
 
-    let fullPath = path.join(noteRepoPath(), realtiveToBase);
-
-    fs.ensureFile(fullPath).then(() => {
-      addWorkspaceTagIfNo(fullPath);
-      showFile(fullPath);
-    });
-  };
+  fs.ensureFile(fullPath).then(() => {
+    addWorkspaceTagIfNo(fullPath);
+    showFile(fullPath);
+  });
 }
 
 export function newNote() {
@@ -33,5 +22,5 @@ export function newNote() {
       prompt: `Note path (relate to note repository root)`,
       value: "",
     })
-    .then(createNewNote());
+    .then(createNewNote);
 }

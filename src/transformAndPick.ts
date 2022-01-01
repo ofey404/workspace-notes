@@ -107,10 +107,7 @@ export function isMarkDown() {
   return newTransform(test);
 }
 
-export function transFormAndPick(
-  transforms: internal.Transform[],
-  pickOptions?: vscode.QuickPickOptions
-) {
+export function transform(transforms: internal.Transform[], onEnd: Function) {
   let files: klaw.Item[] = [];
 
   let target = klaw(noteRepoPath());
@@ -122,8 +119,19 @@ export function transFormAndPick(
   target
     .on("data", (item) => files.push(item))
     .on("error", errorScanningFile())
-    .on("end", () => {
+    .on("end", onEnd(files));
+}
+
+export function transformAndPick(
+  transforms: internal.Transform[],
+  pickOptions?: vscode.QuickPickOptions
+) {
+  const onEnd = (files: klaw.Item[]) => {
+    return () => {
       files.sort(byMtime);
       quickPickRelativePath(files, pickOptions, newNote);
-    });
+    };
+  };
+
+  transform(transforms, onEnd);
 }

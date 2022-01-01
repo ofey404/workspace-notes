@@ -1,5 +1,5 @@
 import { Stream } from "stream";
-import { transFormAndPick, ignorePatternAndDir, isMarkDown } from "./transformAndPick";
+import { transformAndPick, ignorePatternAndDir, isMarkDown } from "./transformAndPick";
 import { hasWorkspaceTag } from "./util";
 
 export function pickWorkspaceNote() {
@@ -12,5 +12,5 @@ export function pickWorkspaceNote() {
       next();
     },
   });
-  transFormAndPick([ignorePatternAndDir(), isMarkDown(), hasCurrentWorkspaceTag]);
+  transformAndPick([ignorePatternAndDir(), isMarkDown(), hasCurrentWorkspaceTag]);
 }
