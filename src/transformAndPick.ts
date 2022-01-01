@@ -4,6 +4,8 @@ import * as path from "path";
 import * as klaw from "klaw";
 import { showFile, noteRepoPath, ignorePattern } from "./util";
 import internal = require("stream");
+import { newNote } from "./newNote";
+import { on } from "events";
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
@@ -52,9 +54,17 @@ function showFileIfValid() {
 
 function quickPickRelativePath(
   files: Array<klaw.Item>,
-  options?: vscode.QuickPickOptions
+  options?: vscode.QuickPickOptions,
+  onNotFound?: () => void
 ) {
   const relativePaths = files.map(toRelativePath);
+
+  if (relativePaths.length === 0) {
+    if (onNotFound) {
+      onNotFound();
+    }
+    return;
+  }
 
   if (relativePaths.length === 1) {
     let candidate = path.join(noteRepoPath(), relativePaths[0]);
@@ -114,6 +124,6 @@ export function transFormAndPick(
     .on("error", errorScanningFile())
     .on("end", () => {
       files.sort(byMtime);
-      quickPickRelativePath(files, pickOptions);
+      quickPickRelativePath(files, pickOptions, newNote);
     });
 }

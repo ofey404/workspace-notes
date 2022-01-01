@@ -14,7 +14,7 @@ function createNewNote() {
 
     // Check for empty string but confirmation in the new note dialog
     if (realtiveToBase === "" || !realtiveToBase) {
-      vscode.window.showErrorMessage("New note name should not be empty.");
+      vscode.window.showInformationMessage("New note name should not be empty.");
       return;
     }
 
