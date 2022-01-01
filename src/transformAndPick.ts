@@ -80,6 +80,20 @@ export function ignorePatternAndDir() {
   });
 }
 
+const isMarkdownRegExp = new RegExp(".+.md$");
+export function isMarkDown() {
+  return new Stream.Transform({
+    objectMode: true,
+    transform: function (item, enc, next) {
+      const relativePath = toRelativePath(item);
+      if (isMarkdownRegExp.test(relativePath)) {
+        this.push(item);
+      }
+      next();
+    },
+  });
+}
+
 export function transFormAndPick(
   transforms: internal.Transform[],
   pickOptions?: vscode.QuickPickOptions
