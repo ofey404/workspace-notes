@@ -1,6 +1,8 @@
 # workspace-notes
 
-Workspace oriented note plugin. Quick open notes related to current workspace, while managing them in a single repository.
+Workspace oriented note plugin.
+
+Quick open notes related to current workspace, while managing them in a single repository.
 
 > I always feel unsatisified while taking notes about code projects:
 > 
@@ -14,14 +16,12 @@ Workspace oriented note plugin. Quick open notes related to current workspace, w
 If you have similar unsatisifaction like me, `workspace-notes` come to your rescue.
 
 ```
-TODO: Quick start
+TODO: Fill README after the features become stable.
 ```
 
 All notes are managed in a single repository, as plain markdown file.
 
 No black magic, minimum assumption. Only rely on tag `workspace: /path/to/it` contained in every markdown file, so you can place and move them freely.
-
-TODO: Under construction.
 
 ----
 

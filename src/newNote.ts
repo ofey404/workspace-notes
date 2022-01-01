@@ -4,6 +4,7 @@ import * as fs from "fs-extra";
 import { addWorkspaceTagIfNo, noteRepoPath, showFile } from "./util";
 
 function createNewNote() {
+  // TODO: a better creation experience
   return (realtiveToBase: string | undefined) => {
     // Check for aborting the new note dialog
     if (realtiveToBase === null) {
