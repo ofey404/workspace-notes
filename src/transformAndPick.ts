@@ -67,12 +67,11 @@ function quickPickRelativePath(
     .then(showFileIfValid(), errorShowQuickPick());
 }
 
-export function ignorePatternAndDir() {
+function newTransform(test: (item: klaw.Item) => Boolean) {
   return new Stream.Transform({
     objectMode: true,
     transform: function (item, enc, next) {
-      const relativePath = toRelativePath(item);
-      if (!ignorePattern().test(relativePath) && !item.stats.isDirectory()) {
+      if (test(item)) {
         this.push(item);
       }
       next();
@@ -80,18 +79,22 @@ export function ignorePatternAndDir() {
   });
 }
 
+export function ignorePatternAndDir() {
+  const test = (item: klaw.Item) => {
+    const relativePath = toRelativePath(item);
+    return !ignorePattern().test(relativePath) && !item.stats.isDirectory();
+  };
+  return newTransform(test);
+}
+
 const isMarkdownRegExp = new RegExp(".+.md$");
+
 export function isMarkDown() {
-  return new Stream.Transform({
-    objectMode: true,
-    transform: function (item, enc, next) {
-      const relativePath = toRelativePath(item);
-      if (isMarkdownRegExp.test(relativePath)) {
-        this.push(item);
-      }
-      next();
-    },
-  });
+  const test = (item: klaw.Item) => {
+    const relativePath = toRelativePath(item);
+    return isMarkdownRegExp.test(relativePath);
+  };
+  return newTransform(test);
 }
 
 export function transFormAndPick(
