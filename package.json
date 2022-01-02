@@ -34,7 +34,7 @@
       "type": "object",
       "title": "from workspace-note",
       "properties": {
-        "workspaceNotes.defaultNotePath": {
+        "workspaceNotes.noteRepoPath": {
           "type": "string",
           "default": "",
           "description": "Path to note repository."

@@ -10,7 +10,21 @@ export function errorIfUndefined(ans: string | undefined) {
   return ans;
 }
 
-export function showFile(path: string) {
+const typeMisMatchError = "type mismatch!";
+
+export function showFile(item: Item): void;
+export function showFile(path: string): void;
+
+export function showFile(a: any) {
+  let path: string;
+  if (typeof a === "string") {
+    path = a;
+  } else if (a instanceof Item) {
+    path = a.path;
+  } else {
+    throw typeMisMatchError;
+  }
+
   vscode.window.showTextDocument(vscode.Uri.file(path), {
     preserveFocus: false,
     preview: false,

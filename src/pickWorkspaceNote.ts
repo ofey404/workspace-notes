@@ -12,5 +12,5 @@ async function collectWorkspaceNote() {
 export async function pickWorkspaceNote() {
   collectWorkspaceNote()
     .then(await quickPickRelativePath)
-    .then(async (p) => await showFile(p.path));
+    .then(showFile);
 }

@@ -6,8 +6,18 @@ function config() {
   return vscode.workspace.getConfiguration("workspaceNotes");
 }
 
+const repoPathEmptyError =
+  "workspaceNotes.noteRepoPath is empty, workspace-note may not work properly.";
+
 export function repoPath() {
-  return resolveHome(config().get("defaultNotePath"));
+  const rp: string | undefined = config().get("noteRepoPath");
+  if (rp === undefined || rp === "") {
+    vscode.window.showErrorMessage(
+      "workspaceNotes.noteRepoPath is empty, workspace-note may not work properly."
+    );
+    throw repoPathEmptyError;
+  }
+  return resolveHome(rp);
 }
 
 export function ignorePattern() {
@@ -20,14 +30,9 @@ export function ignorePattern() {
   return new RegExp(p);
 }
 
-function resolveHome(filepath: string | undefined) {
-  if (path === null || !filepath) {
-    return "";
-  }
-
+function resolveHome(filepath: string) {
   if (filepath[0] === "~") {
     return path.join(os.homedir(), filepath.slice(1));
   }
   return filepath;
 }
-
