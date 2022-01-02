@@ -1,6 +1,6 @@
 import { Stream } from "stream";
-import { transformAndPick, ignorePatternAndDir, isMarkDown } from "./transformAndPick";
 import { hasWorkspaceTag } from "./util";
+import { transformAndPick, ignorePatternAndDir, isMarkDown } from "./transformAndPick";
 
 export function pickWorkspaceNote() {
   const hasCurrentWorkspaceTag = new Stream.Transform({

@@ -1,11 +1,10 @@
 import * as vscode from "vscode";
-import { Stream } from "stream";
 import * as path from "path";
 import * as klaw from "klaw";
+import { Stream } from "stream";
 import { showFile, noteRepoPath, ignorePattern } from "./util";
 import internal = require("stream");
 import { newNote } from "./newNote";
-import { on } from "events";
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
@@ -107,7 +106,10 @@ export function isMarkDown() {
   return newTransform(test);
 }
 
-export function transform(transforms: internal.Transform[], onEnd: Function) {
+export function transformInRepo(
+  transforms: internal.Transform[],
+  onEnd: Function
+) {
   let files: klaw.Item[] = [];
 
   let target = klaw(noteRepoPath());
@@ -122,6 +124,11 @@ export function transform(transforms: internal.Transform[], onEnd: Function) {
     .on("end", onEnd(files));
 }
 
+function onNotFound() {
+        vscode.window.showInformationMessage("No workspace note, create one?");
+        newNote();
+}
+
 export function transformAndPick(
   transforms: internal.Transform[],
   pickOptions?: vscode.QuickPickOptions
@@ -129,9 +136,9 @@ export function transformAndPick(
   const onEnd = (files: klaw.Item[]) => {
     return () => {
       files.sort(byMtime);
-      quickPickRelativePath(files, pickOptions, newNote);
+      quickPickRelativePath(files, pickOptions, onNotFound);
     };
   };
 
-  transform(transforms, onEnd);
+  transformInRepo(transforms, onEnd);
 }
