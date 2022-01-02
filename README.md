@@ -1,96 +1,57 @@
 # workspace-notes
 
-Workspace oriented note plugin.
+Associate markdown notes with certain workspace, while managing them in a single repository.
+
+No black magic, with minimum assumption. Only rely on tag `workspace: /path/to/it`.
+
+**30s video demo:**
 
 ![demo](https://raw.githubusercontent.com/ofey404/workspace-notes/master/images/demo.gif)
+
 ## Usage
 
-Quick open notes related to current workspace, while managing them in a single repository.
+First, set `workspaceNotes.noteRepoPath` to your note directory.
 
-> I always feel unsatisified while taking notes about code projects:
-> 
-> - Choice 1: Put note file directly under project path.
->   - Problem: They pollute version control.
->   - Besides, it's a pain to accumulate or read later.
-> - Choice 2: Manage them in a centralized repository, or a stand alone note applciation.
->   - Problem: Repetitively open another project/application, and find related note.
->   - Also have to manage an extra map (note -> workspace).
+Use `Workspace Notes: Create a New Note` command to create a new note associated to current workspace.
 
-If you have similar unsatisifaction like me, `workspace-notes` come to your rescue.
+- Workspace information is stored in the header of markdown file, like the example below.
 
+```markdown
+---
+workspace: /home/ofey/Code/LearningVSCodeExtension/workspace-notes
+---
+
+**Example Note Content**
 ```
-TODO: Fill README after the features become stable.
-```
-
-All notes are managed in a single repository, as plain markdown file.
-
-No black magic, minimum assumption. Only rely on tag `workspace: /path/to/it` contained in every markdown file, so you can place and move them freely.
 
 ----
 
-## Features
+`Workspace Notes: Pick a workspace note to open` command can quick pick a workspace note from the repository.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- If there don't have any note related to current workspace, create one.
 
-For example if there is an image subfolder under your extension project workspace:
+----
 
-\!\[feature X\]\(images/feature-x.png\)
+Use `Workspace Notes: List all notes` command to list all notes in repository and pick one. Ordered by modify time.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+----
 
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+`Workspace Notes: Add workspace tag to current note` command is to add workspace tag to current note.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `workspaceNotes.noteRepoPath`: path to note repository.
+* `workspaceNotes.ignorePatterns`: regular expressions to ignore **absolute paths** when parsing documents in note folder.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
+`workspaceNotes.ignorePatterns` don't support windows path split (`\`) now.
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- Setup everything.
+- Add `workspace-notes.newNote`.
+- Add `workspace-notes.listAllNotes`.
+- Add `workspace-notes.pickWorkspaceNote`.
+- Add `workspace-notes.addWorkspaceTag`.

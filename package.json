@@ -52,7 +52,7 @@
           "default": [
             ".*/\\..*|^\\..*"
           ],
-          "description": "Regular expressions for file names to ignore when parsing documents in note folder."
+          "description": "Regular expressions to ignore **absolute paths** when parsing documents in note folder."
         }
       }
     }
@@ -82,7 +82,6 @@
   "dependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/klaw": "^3.0.3",
-    "@types/through2": "^2.0.36",
     "fs-extra": "^10.0.0",
     "gray-matter": "^4.0.3",
     "klaw": "^4.0.1"
