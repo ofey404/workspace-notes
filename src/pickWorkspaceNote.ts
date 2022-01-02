@@ -4,7 +4,7 @@ import { quickPickRelativePath, showFile } from "./utils/interactions";
 import { Filter, getMarkdown, Item } from "./utils/item";
 import { hasWorkspaceTag } from "./utils/tag";
 
-async function collectWorkspaceNote() {
+function collectWorkspaceNote() {
   const filter = new Filter((item) => {
     return !item.stats.isDirectory() && hasWorkspaceTag(item.path);
   });

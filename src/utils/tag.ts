@@ -29,14 +29,16 @@ function getWorkspacePath() {
   return undefined;
 }
 
-export async function ensureWorkspaceTagOnFile(filePath: string) {
-  let obj = matter(await fs.readFile(filePath, "utf-8"));
+export function ensureWorkspaceTagOnFile(filePath: string) {
+  // HACK: Modify the original object would cause problem:
+  //       Sometimes when we read the file again, we'll get the modified object.
+  let objCopy = JSON.parse(JSON.stringify(matter.read(filePath)));
   let workspacePath = getWorkspacePath();
   if (workspacePath === undefined) {
     return;
   }
-  pushTagIfNo(obj, "workspace", workspacePath);
-  await fs.outputFile(filePath, matter.stringify(obj.content, obj.data));
+  pushTagIfNo(objCopy, "workspace", workspacePath);
+  fs.outputFileSync(filePath, matter.stringify(objCopy.content, objCopy.data));
 }
 
 function hasTag(obj: matter.GrayMatterFile<matter.Input>, tag: string) {
@@ -66,7 +68,7 @@ function hasTagPair(
 }
 
 export function hasWorkspaceTag(filePath: string) {
-  let obj = matter(fs.readFileSync(filePath, "utf-8"));
+  let obj = matter.read(filePath);
   let workspacePath = getWorkspacePath();
 
   if (workspacePath === undefined) {
