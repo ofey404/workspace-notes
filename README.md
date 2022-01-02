@@ -2,6 +2,9 @@
 
 Workspace oriented note plugin.
 
+![demo](https://raw.githubusercontent.com/ofey404/workspace-notes/master/images/demo.gif)
+## Usage
+
 Quick open notes related to current workspace, while managing them in a single repository.
 
 > I always feel unsatisified while taking notes about code projects:
