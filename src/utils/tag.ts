@@ -29,7 +29,7 @@ function getWorkspacePath() {
   return undefined;
 }
 
-export async function addWorkspaceTagIfNo(filePath: string) {
+export async function ensureWorkspaceTagOnFile(filePath: string) {
   let obj = matter(await fs.readFile(filePath, "utf-8"));
   let workspacePath = getWorkspacePath();
   if (workspacePath === undefined) {

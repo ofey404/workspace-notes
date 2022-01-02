@@ -64,13 +64,21 @@ function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
 }
 
+function havePrefix(path: string, prefix: string) {
+  return path.slice(0, prefix.length) === prefix;
+}
+
+export function inNoteRepo(path: string) {
+  return havePrefix(path, repoPath());
+}
+
 export function getMarkdown(filters?: internal.Transform[]) {
   const markdown = new Filter((item) => {
     return path.extname(item.path) === ".md";
   });
   let allFilters = [markdown];
   if (filters !== undefined) {
-    allFilters.push(...filters); 
+    allFilters.push(...filters);
   }
   return getItems(allFilters);
 }

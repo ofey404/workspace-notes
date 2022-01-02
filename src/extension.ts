@@ -1,8 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { newNote } from "./newNote";
+import { addWorkspaceTag } from "./addWorkspaceTag";
 import { listAllNotes } from "./listAllNotes";
+import { newNote } from "./newNote";
 import { pickWorkspaceNote } from "./pickWorkspaceNote";
 
 function registerCommand(
@@ -22,6 +23,11 @@ export function activate(context: vscode.ExtensionContext) {
     context,
     "workspace-notes.pickWorkspaceNote",
     pickWorkspaceNote
+  );
+  registerCommand(
+    context,
+    "workspace-notes.addWorkspaceTag",
+    addWorkspaceTag
   );
 }
 

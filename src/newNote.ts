@@ -4,10 +4,10 @@ import * as vscode from "vscode";
 import {
   errorIfUndefined,
   quickPickRelativePath,
-  showFile
+  showFile,
 } from "./utils/interactions";
 import { Filter, getItems, Item } from "./utils/item";
-import { addWorkspaceTagIfNo } from "./utils/tag";
+import { ensureWorkspaceTagOnFile } from "./utils/tag";
 
 function validDirItems() {
   const filter = new Filter((item) => item.stats.isDirectory());
@@ -17,7 +17,7 @@ function validDirItems() {
 async function pickAPath() {
   const dirs = await validDirItems();
   return await quickPickRelativePath(dirs, {
-    title: "Directory of new note"
+    title: "Directory of new note",
   });
 }
 
@@ -38,7 +38,7 @@ async function constructFullPath(dir: Item) {
 
 async function createFileWithTag(path: string) {
   return await fs.ensureFile(path).then(async () => {
-    await addWorkspaceTagIfNo(path);
+    await ensureWorkspaceTagOnFile(path);
     return path;
   });
 }
