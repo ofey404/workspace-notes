@@ -38,11 +38,11 @@ function getItemsWithoutIgnore(
 }
 
 export class Filter extends internal.Stream.Transform {
-  constructor(test: (item: Item) => Boolean) {
+  constructor(good: (item: Item) => Boolean) {
     super({
       objectMode: true,
       transform: function (item, enc, next) {
-        if (test(item)) {
+        if (good(item)) {
           this.push(item);
         }
         next();
@@ -55,14 +55,22 @@ function ignoreInConfig() {
   return new Filter((item) => !ignorePattern().test(path.basename(item.path)));
 }
 
-export function getItems(filters?: internal.Transform[]): Promise<Array<Item>> {
+export function getItems(filters: internal.Transform[]): Promise<Array<Item>> {
   const basic = ignoreInConfig();
-  if (filters === undefined) {
-    return getItemsWithoutIgnore([basic]);
-  }
   return getItemsWithoutIgnore([basic, ...filters.slice()]);
 }
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
+}
+
+export function getMarkdown(filters?: internal.Transform[]) {
+  const markdown = new Filter((item) => {
+    return path.extname(item.path) === ".md";
+  });
+  let allFilters = [markdown];
+  if (filters !== undefined) {
+    allFilters.push(...filters); 
+  }
+  return getItems(allFilters);
 }

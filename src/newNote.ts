@@ -16,7 +16,9 @@ function validDirItems() {
 
 async function pickAPath() {
   const dirs = await validDirItems();
-  return await quickPickRelativePath(dirs);
+  return await quickPickRelativePath(dirs, {
+    title: "Directory of new note"
+  });
 }
 
 async function askFileBaseName() {

@@ -46,7 +46,7 @@ function findByRelativePath(items: Item[]) {
 
 const noItemError = "No item provided to quickpick";
 
-export async function quickPickRelativePath(items: Item[]) {
+export async function quickPickRelativePath(items: Item[], options?: vscode.QuickPickOptions) {
   if (items.length === 0) {
     throw noItemError;
   }
@@ -55,7 +55,7 @@ export async function quickPickRelativePath(items: Item[]) {
   }
   const relativePaths = items.map((item) => item.relativePath());
   return await vscode.window
-    .showQuickPick(relativePaths)
+    .showQuickPick(relativePaths, options)
     .then(errorIfUndefined)
     .then(findByRelativePath(items));
 }
