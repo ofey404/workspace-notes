@@ -1,6 +1,6 @@
 # Workspace Notes
 
-Associate markdown notes with certain workspace, while managing them in a single repository.
+Access markdown notes quickly from workspace, while managing notes in a single repository.
 
 No black magic, with minimum assumption. Only rely on tag `workspace: /path/to/it`.
 
@@ -12,7 +12,7 @@ No black magic, with minimum assumption. Only rely on tag `workspace: /path/to/i
 
 First, set `workspaceNotes.noteRepoPath` to your note directory. In my case it's `~/Documents/WorkspaceNotes`.
 
-Use `Workspace Notes: Create a New Note` command to create a new note associated to current workspace.
+`Workspace Notes: Create a New Note` command can create a new note associated to current workspace.
 
 - Workspace information is stored in the header of markdown file, like the example below.
 
@@ -24,17 +24,12 @@ workspace: /home/ofey/Code/LearningVSCodeExtension/workspace-notes
 **Example Note Content**
 ```
 
-----
-
 `Workspace Notes: Pick a workspace note to open` command can quick pick a workspace note from the repository.
 
+- If only one candidate, open it directly.
 - If there don't have any note related to current workspace, create one.
 
-----
-
-Use `Workspace Notes: List all notes` command to list all notes in repository and pick one. Ordered by modify time.
-
-----
+`Workspace Notes: List all notes` command can list all notes in repository and pick one. Ordered by modify time.
 
 `Workspace Notes: Add workspace tag to current note` command is to add workspace tag to current note.
 
@@ -48,9 +43,10 @@ Use `Workspace Notes: List all notes` command to list all notes in repository an
 ## Known Issues
 
 `workspaceNotes.ignorePatternsWindows` is untested.
+
 ## Release Notes
 
-### 0.0 Version
+### 0.0.*
 
 - Setup everything.
 - Add `workspace-notes.newNote`.
