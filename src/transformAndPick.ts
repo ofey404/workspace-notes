@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
+import * as fs from "fs-extra";
 import * as path from "path";
 import * as klaw from "klaw";
 import { Stream } from "stream";
-import { showFile, noteRepoPath, ignorePattern } from "./util";
+import { showFile, noteRepoPath, ignorePattern, addWorkspaceTagIfNo } from "./util";
 import internal = require("stream");
 import { newNote } from "./newNote";
 
@@ -76,7 +77,7 @@ function quickPickRelativePath(
     .then(showFileIfValid(), errorShowQuickPick());
 }
 
-function newTransform(test: (item: klaw.Item) => Boolean) {
+export function newTransform(test: (item: klaw.Item) => Boolean) {
   return new Stream.Transform({
     objectMode: true,
     transform: function (item, enc, next) {
@@ -87,6 +88,8 @@ function newTransform(test: (item: klaw.Item) => Boolean) {
     },
   });
 }
+
+// TODO: refactor ignorepatterns
 
 export function ignorePatternAndDir() {
   const test = (item: klaw.Item) => {
@@ -124,9 +127,9 @@ export function transformInRepo(
     .on("end", onEnd(files));
 }
 
-function onNotFound() {
-        vscode.window.showInformationMessage("No workspace note, create one?");
-        newNote();
+function onNotFoundNote() {
+  vscode.window.showInformationMessage("No workspace note, create one?");
+  newNote();
 }
 
 export function transformAndPick(
@@ -136,9 +139,42 @@ export function transformAndPick(
   const onEnd = (files: klaw.Item[]) => {
     return () => {
       files.sort(byMtime);
-      quickPickRelativePath(files, pickOptions, onNotFound);
+      quickPickRelativePath(files, pickOptions, onNotFoundNote);
     };
   };
 
   transformInRepo(transforms, onEnd);
+}
+
+function pickFromThem(items: klaw.Item[]) {
+  return () => {
+    vscode.window.showQuickPick(items.map(toRelativePath)).then((dirName) => {
+      if (dirName === undefined) {
+        return;
+      }
+      vscode.window
+        .showInputBox({
+          prompt: `Note path (relate to note repository root)`,
+          value: "",
+        })
+        .then((fileName) => {
+          if (fileName === undefined) {
+            return;
+          }
+          let fullPath = path.join(noteRepoPath(), dirName, fileName);
+
+          fs.ensureFile(fullPath).then(() => {
+            addWorkspaceTagIfNo(fullPath);
+            showFile(fullPath);
+          });
+        });
+    });
+  };
+}
+
+export function getAllDirectories() {
+  const filter = newTransform((item) => {
+    return !ignorePattern().test(item.path) && item.stats.isDirectory();
+  });
+  transformInRepo([filter], pickFromThem);
 }
