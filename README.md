@@ -1,4 +1,4 @@
-# workspace-notes
+# Workspace Notes
 
 Associate markdown notes with certain workspace, while managing them in a single repository.
 
@@ -45,7 +45,7 @@ Use `Workspace Notes: List all notes` command to list all notes in repository an
 
 ## Known Issues
 
-Default `workspaceNotes.ignorePatternsPOSIX` don't cover windows path split (`\`) now.
+`workspaceNotes.ignorePatternsWindows` is untested.
 ## Release Notes
 
 ### 0.0.1
