@@ -8,7 +8,7 @@
     "url": "https://ofey404.github.io"
   },
   "publisher": "OfeyChan",
-  "icon": "https://raw.githubusercontent.com/ofey404/workspace-notes/master/images/workspace-notes-icon.png",
+  "icon": "images/workspace-notes-icon.png",
   "description": "Access markdown notes quickly from workspace, while managing notes in a single repository.",
   "version": "0.0.3",
   "engines": {
