@@ -1,6 +1,13 @@
 {
   "name": "workspace-notes",
   "displayName": "workspace-notes",
+  "repository": "https://github.com/ofey404/workspace-notes",
+  "author": {
+    "name": "Ofey Chan",
+    "email": "ofey206@gmail.com",
+    "url": "https://ofey404.github.io"
+  },
+  "publisher": "OfeyChan",
   "description": "Manage markdown notes in a centralized repository, while access them quickly based on workspace.",
   "version": "0.0.1",
   "engines": {
