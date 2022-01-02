@@ -112,32 +112,14 @@ export function hasWorkspaceTag(filePath: string) {
   return false;
 }
 
-// ================ Playground ======================================
-
-export function playground() {
-  const notePath = vscode.workspace
-    .getConfiguration("workspaceNotes")
-    .get("defaultNotePath");
-  vscode.window.showInformationMessage("Note path is: " + notePath);
-
-  let workspacePath = getWorkspacePath();
-  if (workspacePath !== undefined) {
-    let message = `YOUR-EXTENSION: workspace = ${workspacePath}`;
-    vscode.window.showInformationMessage(message);
-  } else {
-    let message =
-      "YOUR-EXTENSION: Working folder not found, open a folder an try again";
-    vscode.window.showErrorMessage(message);
-  }
-
-  vscode.window.showInformationMessage("Hello World from workspace-notes!");
+export function removePrefix(path: string, prefix: string) {
+  return path.slice(prefix.length + 1, path.length);
 }
 
-const ansUndefined = "ans shouldn't be undefined";
-
-export function errorIfUndefined(ans: string | undefined) {
+export function ensureStringDefined(ans: string | undefined) {
   if (ans === undefined) {
-    throw ansUndefined;
+    vscode.window.showErrorMessage("ans shouldn't be undefined");
+    process.exit();
   }
   return ans;
 }

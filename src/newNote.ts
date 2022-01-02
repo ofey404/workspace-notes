@@ -1,30 +1,22 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as vscode from "vscode";
-import { showFile } from "./interactUtils";
 import {
-  newTransform,
-  toRelativePath,
-  transformAsync
-} from "./transformAndPick";
-import {
-  addWorkspaceTagIfNo,
   errorIfUndefined,
-  ignorePattern,
-  noteRepoPath,
-} from "./util";
+  quickPickRelativePath,
+  showFile
+} from "./utils/interactions";
+import { Filter, getItems, Item } from "./utils/item";
+import { addWorkspaceTagIfNo } from "./utils/tag";
 
 function validDirItems() {
-  const filter = newTransform((item) => {
-    return !ignorePattern().test(item.path) && item.stats.isDirectory();
-  });
-  return transformAsync([filter]);
+  const filter = new Filter((item) => item.stats.isDirectory());
+  return getItems([filter]);
 }
 
-async function pickRelativeDirectory() {
+async function pickAPath() {
   const dirs = await validDirItems();
-  const relativeDirs = dirs.map(toRelativePath);
-  return await vscode.window.showQuickPick(relativeDirs).then(errorIfUndefined);
+  return await quickPickRelativePath(dirs);
 }
 
 async function askFileBaseName() {
@@ -36,24 +28,19 @@ async function askFileBaseName() {
     .then(errorIfUndefined);
 }
 
-async function constructFullPath(dirName: string) {
+async function constructFullPath(dir: Item) {
   return await askFileBaseName().then((baseName) => {
-    return path.join(dirName, baseName + ".md");
+    return path.join(dir.path, baseName + ".md");
   });
 }
 
-async function createFileWithTag(relativePath: string) {
-  let fullPath = path.join(noteRepoPath(), relativePath);
-  return await fs.ensureFile(fullPath).then(async () => {
-    await addWorkspaceTagIfNo(fullPath);
-    return fullPath;
+async function createFileWithTag(path: string) {
+  return await fs.ensureFile(path).then(async () => {
+    await addWorkspaceTagIfNo(path);
+    return path;
   });
 }
 
 export function newNote() {
-  pickRelativeDirectory()
-    // TODO: path object {full/relative}
-    .then(constructFullPath)
-    .then(createFileWithTag)
-    .then(showFile);
+  pickAPath().then(constructFullPath).then(createFileWithTag).then(showFile);
 }

@@ -1,14 +1,11 @@
-import * as fs from "fs-extra";
 import * as klaw from "klaw";
 import * as path from "path";
 import { Stream } from "stream";
 import * as vscode from "vscode";
 import { newNote } from "./newNote";
-import {
-  addWorkspaceTagIfNo, ignorePattern, noteRepoPath
-} from "./util";
+import { ignorePattern, noteRepoPath } from "./util";
+import { showFile } from "./utils/interactions";
 import internal = require("stream");
-import { showFile } from "./interactUtils";
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
@@ -168,37 +165,4 @@ export function transformAndPick(
   };
 
   transformInRepo(transforms, onEnd);
-}
-
-function pickFromThem(items: klaw.Item[]) {
-  return () => {
-    vscode.window.showQuickPick(items.map(toRelativePath)).then((dirName) => {
-      if (dirName === undefined) {
-        return;
-      }
-      vscode.window
-        .showInputBox({
-          prompt: `Note path (relate to note repository root)`,
-          value: "",
-        })
-        .then((fileName) => {
-          if (fileName === undefined) {
-            return;
-          }
-          let fullPath = path.join(noteRepoPath(), dirName, fileName);
-
-          fs.ensureFile(fullPath).then(() => {
-            addWorkspaceTagIfNo(fullPath);
-            showFile(fullPath);
-          });
-        });
-    });
-  };
-}
-
-export function getAllDirectories() {
-  const filter = newTransform((item) => {
-    return !ignorePattern().test(item.path) && item.stats.isDirectory();
-  });
-  transformInRepo([filter], pickFromThem);
 }

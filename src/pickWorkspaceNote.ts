@@ -1,18 +1,14 @@
+import * as klaw from "klaw";
 import * as path from "path";
 import * as vscode from "vscode";
-import { showFile } from "./interactUtils";
+import { showFile } from "./utils/interactions";
 import { newNote } from "./newNote";
 import {
   newTransform,
   toRelativePath,
-  transformAsync,
+  transformAsync
 } from "./transformAndPick";
-import {
-  errorIfUndefined,
-  hasWorkspaceTag,
-  ignorePattern,
-  noteRepoPath,
-} from "./util";
+import { ensureStringDefined, hasWorkspaceTag, ignorePattern, noteRepoPath } from "./util";
 
 async function collectWorkspaceNote() {
   const filter = newTransform((item) => {
@@ -25,9 +21,7 @@ async function collectWorkspaceNote() {
   return transformAsync([filter]);
 }
 
-export function pickWorkspaceNote() {
-  collectWorkspaceNote()
-    .then((items) => {
+async function pickNoteQuick1(items: klaw.Item[]) {
       const relativeDirs = items.map(toRelativePath);
       if (relativeDirs.length === 0) {
         newNote();
@@ -37,8 +31,12 @@ export function pickWorkspaceNote() {
       if (relativeDirs.length === 1) {
         return relativeDirs[0];
       }
-      return vscode.window.showQuickPick(relativeDirs).then(errorIfUndefined);
-    })
+      return vscode.window.showQuickPick(relativeDirs).then(ensureStringDefined);
+}
+
+export function pickWorkspaceNote() {
+  collectWorkspaceNote()
+    .then(pickNoteQuick1)
     .then(async (p) => {
       vscode.window.showInformationMessage(p);
 
