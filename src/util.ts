@@ -4,13 +4,6 @@ import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
 
-export function showFile(path: string) {
-  vscode.window.showTextDocument(vscode.Uri.file(path), {
-    preserveFocus: false,
-    preview: false,
-  });
-}
-
 function config() {
   return vscode.workspace.getConfiguration("workspaceNotes");
 }

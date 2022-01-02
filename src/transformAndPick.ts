@@ -5,9 +5,10 @@ import { Stream } from "stream";
 import * as vscode from "vscode";
 import { newNote } from "./newNote";
 import {
-  addWorkspaceTagIfNo, ignorePattern, noteRepoPath, showFile
+  addWorkspaceTagIfNo, ignorePattern, noteRepoPath
 } from "./util";
 import internal = require("stream");
+import { showFile } from "./interactUtils";
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);

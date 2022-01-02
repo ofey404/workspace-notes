@@ -1,17 +1,17 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as vscode from "vscode";
+import { showFile } from "./interactUtils";
 import {
   newTransform,
   toRelativePath,
-  transformAsync,
+  transformAsync
 } from "./transformAndPick";
 import {
   addWorkspaceTagIfNo,
   errorIfUndefined,
   ignorePattern,
   noteRepoPath,
-  showFile,
 } from "./util";
 
 function validDirItems() {
@@ -44,14 +44,15 @@ async function constructFullPath(dirName: string) {
 
 async function createFileWithTag(relativePath: string) {
   let fullPath = path.join(noteRepoPath(), relativePath);
-  return await fs.ensureFile(fullPath).then(() => {
-    addWorkspaceTagIfNo(fullPath);
+  return await fs.ensureFile(fullPath).then(async () => {
+    await addWorkspaceTagIfNo(fullPath);
     return fullPath;
   });
 }
 
 export function newNote() {
   pickRelativeDirectory()
+    // TODO: path object {full/relative}
     .then(constructFullPath)
     .then(createFileWithTag)
     .then(showFile);
