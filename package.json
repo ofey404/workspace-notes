@@ -45,7 +45,7 @@
             "type": "string"
           },
           "default": [
-            "^\\."
+            ".*/\\..*|^\\..*"
           ],
           "description": "Regular expressions for file names to ignore when parsing documents in note folder."
         }

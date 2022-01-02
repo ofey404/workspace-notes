@@ -52,7 +52,7 @@ export class Filter extends internal.Stream.Transform {
 }
 
 function ignoreInConfig() {
-  return new Filter((item) => !ignorePattern().test(path.basename(item.path)));
+  return new Filter((item) => !ignorePattern().test(item.path));
 }
 
 export function getItems(filters: internal.Transform[]): Promise<Array<Item>> {
