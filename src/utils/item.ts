@@ -1,5 +1,6 @@
 import * as fs from "fs-extra";
 import * as klaw from "klaw";
+import * as path from "path";
 import * as internal from "stream";
 import { ignorePattern, repoPath } from "./config";
 
@@ -37,7 +38,7 @@ function getItemsWithoutIgnore(
 }
 
 export class Filter extends internal.Stream.Transform {
-  constructor(test: (item: klaw.Item) => Boolean) {
+  constructor(test: (item: Item) => Boolean) {
     super({
       objectMode: true,
       transform: function (item, enc, next) {
@@ -51,8 +52,7 @@ export class Filter extends internal.Stream.Transform {
 }
 
 function ignoreInConfig() {
-  // TODO: bug on .test
-  return new Filter((item) => !ignorePattern().test(item.path));
+  return new Filter((item) => !ignorePattern().test(path.basename(item.path)));
 }
 
 export function getItems(filters?: internal.Transform[]): Promise<Array<Item>> {
