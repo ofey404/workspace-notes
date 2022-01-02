@@ -51,7 +51,7 @@
           "default": "",
           "description": "Path to note repository."
         },
-        "workspaceNotes.ignorePatterns": {
+        "workspaceNotes.ignorePatternsPOSIX": {
           "type": "array",
           "items": {
             "type": "string"
@@ -59,7 +59,17 @@
           "default": [
             ".*/\\..*|^\\..*"
           ],
-          "description": "Regular expressions to ignore **absolute paths** when parsing documents in note folder."
+          "description": "On POSIX filesystem: Regular expressions to ignore, match **absolute paths**."
+        },
+        "workspaceNotes.ignorePatternsWindows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            ".*\\\\\\..*|^\\..*"
+          ],
+          "description": "On Windows: Regular expressions to ignore, match **absolute paths**."
         }
       }
     }

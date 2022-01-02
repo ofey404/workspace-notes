@@ -30,8 +30,8 @@ function getWorkspacePath() {
 }
 
 export function ensureWorkspaceTagOnFile(filePath: string) {
-  // HACK: Modify the original object would cause problem:
-  //       Sometimes when we read the file again, we'll get the modified object.
+  // HACK: Modify the original object would cause a subtle problem:
+  //       Sometimes when reading the same file again, we'll get the modified object.
   let objCopy = JSON.parse(JSON.stringify(matter.read(filePath)));
   let workspacePath = getWorkspacePath();
   if (workspacePath === undefined) {

@@ -21,7 +21,17 @@ export function repoPath() {
 }
 
 export function ignorePattern() {
-  let patterns = config().get<Array<string>>("ignorePatterns") as Array<string>;
+  let patterns;
+  if (os.platform() === "win32") {
+    patterns = config().get<Array<string>>(
+      "ignorePatternsWindows"
+    ) as Array<string>;
+  } else {
+    // FIXME: other platforms?
+    patterns = config().get<Array<string>>(
+      "ignorePatternsPOSIX"
+    ) as Array<string>;
+  }
   let p: string = patterns
     .map((pattern) => {
       return "(" + pattern + ")";

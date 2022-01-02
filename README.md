@@ -10,7 +10,7 @@ No black magic, with minimum assumption. Only rely on tag `workspace: /path/to/i
 
 ## Usage
 
-First, set `workspaceNotes.noteRepoPath` to your note directory.
+First, set `workspaceNotes.noteRepoPath` to your note directory. In my case it's `~/Documents/WorkspaceNotes`.
 
 Use `Workspace Notes: Create a New Note` command to create a new note associated to current workspace.
 
@@ -41,11 +41,11 @@ Use `Workspace Notes: List all notes` command to list all notes in repository an
 ## Extension Settings
 
 * `workspaceNotes.noteRepoPath`: path to note repository.
-* `workspaceNotes.ignorePatterns`: regular expressions to ignore **absolute paths** when parsing documents in note folder.
+* `workspaceNotes.ignorePatternsPOSIX`: regular expressions to ignore **absolute paths** when parsing documents in note folder.
 
 ## Known Issues
 
-`workspaceNotes.ignorePatterns` don't support windows path split (`\`) now.
+Default `workspaceNotes.ignorePatternsPOSIX` don't cover windows path split (`\`) now.
 ## Release Notes
 
 ### 0.0.1
@@ -55,3 +55,7 @@ Use `Workspace Notes: List all notes` command to list all notes in repository an
 - Add `workspace-notes.listAllNotes`.
 - Add `workspace-notes.pickWorkspaceNote`.
 - Add `workspace-notes.addWorkspaceTag`.
+
+## Thanks
+
+Inspired by [VSNotes](https://github.com/patleeman/VSNotes).
