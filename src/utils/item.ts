@@ -1,7 +1,6 @@
 import * as fs from "fs-extra";
 import * as klaw from "klaw";
 import * as internal from "stream";
-import { removePrefix } from "../util";
 import { ignorePattern, repoPath } from "./config";
 
 export class Item implements klaw.Item {
@@ -52,9 +51,18 @@ export class Filter extends internal.Stream.Transform {
 }
 
 function ignoreInConfig() {
+  // TODO: bug on .test
   return new Filter((item) => !ignorePattern().test(item.path));
 }
 
-export function getItems(filters: internal.Transform[]): Promise<Array<Item>> {
-  return getItemsWithoutIgnore([ignoreInConfig(), ...filters.slice()]);
+export function getItems(filters?: internal.Transform[]): Promise<Array<Item>> {
+  const basic = ignoreInConfig();
+  if (filters === undefined) {
+    return getItemsWithoutIgnore([basic]);
+  }
+  return getItemsWithoutIgnore([basic, ...filters.slice()]);
+}
+
+function removePrefix(path: string, prefix: string) {
+  return path.slice(prefix.length + 1, path.length);
 }

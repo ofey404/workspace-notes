@@ -4,7 +4,7 @@ import * as vscode from "vscode";
 import {
   errorIfUndefined,
   quickPickRelativePath,
-  showFile
+  showFile,
 } from "./utils/interactions";
 import { Filter, getItems, Item } from "./utils/item";
 import { addWorkspaceTagIfNo } from "./utils/tag";

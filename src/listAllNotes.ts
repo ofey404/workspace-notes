@@ -1,5 +1,6 @@
-import { transformAndPick, ignorePatternAndDir } from "./transformAndPick";
+import { quickPickRelativePath, showFile } from "./utils/interactions";
+import { Filter, getItems } from "./utils/item";
 
-export function listAllNotes() {
-  transformAndPick([ignorePatternAndDir()]);
+export async function listAllNotes() {
+  getItems([new Filter(item => !item.stats.isDirectory())]).then(await quickPickRelativePath).then(async p => await showFile(p.path));
 }

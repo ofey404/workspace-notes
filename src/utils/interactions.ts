@@ -21,14 +21,24 @@ function findByRelativePath(items: Item[]) {
   return (relativePath: string) => {
     const ans = items.find((i) => i.relativePath() === relativePath);
     if (ans === undefined) {
-      vscode.window.showErrorMessage("relative path " + relativePath + " not found in items: " + items);
+      vscode.window.showErrorMessage(
+        "relative path " + relativePath + " not found in items: " + items
+      );
       process.exit();
     }
     return ans;
   };
 }
 
+const noItemError = "No item provided to quickpick";
+
 export async function quickPickRelativePath(items: Item[]) {
+  if (items.length === 0) {
+    throw noItemError;
+  }
+  if (items.length === 1) {
+    return items[0];
+  }
   const relativePaths = items.map((item) => item.relativePath());
   return await vscode.window
     .showQuickPick(relativePaths)
