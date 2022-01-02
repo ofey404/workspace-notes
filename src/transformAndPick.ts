@@ -1,11 +1,13 @@
-import * as vscode from "vscode";
 import * as fs from "fs-extra";
-import * as path from "path";
 import * as klaw from "klaw";
+import * as path from "path";
 import { Stream } from "stream";
-import { showFile, noteRepoPath, ignorePattern, addWorkspaceTagIfNo } from "./util";
-import internal = require("stream");
+import * as vscode from "vscode";
 import { newNote } from "./newNote";
+import {
+  addWorkspaceTagIfNo, ignorePattern, noteRepoPath, showFile
+} from "./util";
+import internal = require("stream");
 
 function removePrefix(path: string, prefix: string) {
   return path.slice(prefix.length + 1, path.length);
@@ -39,7 +41,7 @@ function byMtime(a: klaw.Item, b: klaw.Item) {
   }
 }
 
-function toRelativePath(f: klaw.Item) {
+export function toRelativePath(f: klaw.Item) {
   return removePrefix(f.path, noteRepoPath());
 }
 
@@ -130,6 +132,27 @@ export function transformInRepo(
 function onNotFoundNote() {
   vscode.window.showInformationMessage("No workspace note, create one?");
   newNote();
+}
+
+export function transformAsync(
+  transforms: internal.Transform[]
+): Promise<Array<klaw.Item>> {
+  return new Promise((resolve, reject) => {
+    let files: klaw.Item[] = [];
+
+    let target = klaw(noteRepoPath());
+
+    for (var t of transforms) {
+      target = target.pipe(t);
+    }
+
+    target
+      .on("data", (item) => files.push(item))
+      .on("error", reject)
+      .on("end", () => {
+        resolve(files);
+      });
+  });
 }
 
 export function transformAndPick(

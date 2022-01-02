@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
-import * as path from "path";
 import * as fs from "fs-extra";
-import * as os from "os";
 import * as matter from "gray-matter";
+import * as os from "os";
+import * as path from "path";
+import * as vscode from "vscode";
 
 export function showFile(path: string) {
   vscode.window.showTextDocument(vscode.Uri.file(path), {
@@ -11,7 +11,7 @@ export function showFile(path: string) {
   });
 }
 
-export function config() {
+function config() {
   return vscode.workspace.getConfiguration("workspaceNotes");
 }
 
@@ -70,14 +70,14 @@ function pushTagIfNo(
   }
 }
 
-export function addWorkspaceTagIfNo(filePath: string) {
-  let obj = matter(fs.readFileSync(filePath, "utf-8"));
+export async function addWorkspaceTagIfNo(filePath: string) {
+  let obj = matter(await fs.readFile(filePath, "utf-8"));
   let workspacePath = getWorkspacePath();
   if (workspacePath === undefined) {
     return;
   }
   pushTagIfNo(obj, "workspace", workspacePath);
-  fs.outputFileSync(filePath, matter.stringify(obj.content, obj.data));
+  await fs.outputFile(filePath, matter.stringify(obj.content, obj.data));
 }
 
 function hasTag(obj: matter.GrayMatterFile<matter.Input>, tag: string) {
@@ -138,4 +138,13 @@ export function playground() {
   }
 
   vscode.window.showInformationMessage("Hello World from workspace-notes!");
+}
+
+const ansUndefined = "ans shouldn't be undefined";
+
+export function errorIfUndefined(ans: string | undefined) {
+  if (ans === undefined) {
+    throw ansUndefined;
+  }
+  return ans;
 }
