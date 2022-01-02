@@ -41,14 +41,16 @@ Use `Workspace Notes: List all notes` command to list all notes in repository an
 ## Extension Settings
 
 * `workspaceNotes.noteRepoPath`: path to note repository.
-* `workspaceNotes.ignorePatternsPOSIX`: regular expressions to ignore **absolute paths** when parsing documents in note folder.
+* `workspaceNotes.ignorePatternsPOSIX` and `workspaceNotes.ignorePatternsPOSIX`:
+  * ignore patterns, match **absolute paths**.
+
 
 ## Known Issues
 
 `workspaceNotes.ignorePatternsWindows` is untested.
 ## Release Notes
 
-### 0.0.1
+### 0.0 Version
 
 - Setup everything.
 - Add `workspace-notes.newNote`.
