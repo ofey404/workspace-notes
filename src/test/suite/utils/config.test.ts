@@ -5,10 +5,12 @@ import * as path from 'path';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import { ignorePattern, repoPath } from '../../../utils/config';
-
+import { generateFixtureSettings } from '../../runTest';
 
 suite('utils/config Test Suite', () => {
 	vscode.window.showInformationMessage('Start config tests.');
+
+	generateFixtureSettings();
 
 	test('repoPath() test', () => {
 		let p = repoPath();

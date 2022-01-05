@@ -1,0 +1,7 @@
+---
+workspace: IS_WORKSPACE_NOTE
+---
+
+Not a markdown file
+===================
+

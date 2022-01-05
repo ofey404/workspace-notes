@@ -2,9 +2,12 @@
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import { Filter, getMarkdown } from '../../../utils/item';
+import { generateFixtureSettings } from '../../runTest';
 
 suite('utils/item Test Suite', () => {
 	vscode.window.showInformationMessage('Start item tests.');
+
+	generateFixtureSettings();
 
 	test('class Item test', () => {
 	});

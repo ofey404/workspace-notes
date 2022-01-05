@@ -6,7 +6,7 @@ import * as path from 'path';
 const settingGenerationFailed = "setting generation failed.";
 const generationNotSupported = "setting generation only support linux platform.";
 
-function generateSettings() {
+export function generateFixtureSettings() {
 	const generationScript = path.resolve(__dirname, '../../test-fixtures/generate-fixtures.sh');
 	if (os.platform() === 'linux') {
 		exec(generationScript, (err, stdout, stderr) => {
@@ -32,8 +32,6 @@ async function main() {
 
 		// The path to test workspace
 		const testWorkspace = path.resolve(__dirname, '../../test-fixtures/workspace');
-
-		generateSettings();
 
 		// Download VS Code, unzip it and run the integration test
 		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace] });
