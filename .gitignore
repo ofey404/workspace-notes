@@ -16,3 +16,6 @@ node_modules
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Generated test settings.
+test-fixtures/workspace/.vscode/settings.json

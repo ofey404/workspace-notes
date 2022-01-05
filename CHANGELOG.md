@@ -4,6 +4,11 @@ All notable changes to the "workspace-notes" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.3] and [0.0.4]
+
+- Add an pixel art icon.
+- Marketplace integration.
+
 ## [0.0.2]
 
 - Changed `displayName`.

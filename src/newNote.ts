@@ -4,7 +4,7 @@ import * as vscode from "vscode";
 import {
   errorIfUndefined,
   quickPickRelativePath,
-  showFile,
+  showFile
 } from "./utils/interactions";
 import { Filter, getItems, Item } from "./utils/item";
 import { ensureWorkspaceTagOnFile } from "./utils/tag";
@@ -36,9 +36,9 @@ async function constructFullPath(dir: Item) {
   });
 }
 
-async function createFileWithTag(path: string) {
-  return await fs.ensureFile(path).then(async () => {
-    await ensureWorkspaceTagOnFile(path);
+function createFileWithTag(path: string) {
+  return fs.ensureFile(path).then(() => {
+    ensureWorkspaceTagOnFile(path);
     return path;
   });
 }
