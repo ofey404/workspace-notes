@@ -18,4 +18,5 @@ node_modules
 *.vsix
 
 # Generated test settings.
-test-fixtures/workspace/.vscode/settings.json
+test-fixtures/workspace/
+test-fixtures/notes/

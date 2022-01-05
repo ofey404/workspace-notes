@@ -1,20 +1,22 @@
 import { runTests } from '@vscode/test-electron';
-import * as fs from "fs-extra";
+import { exec } from 'child_process';
+import * as os from "os";
 import * as path from 'path';
 
 const settingGenerationFailed = "setting generation failed.";
+const generationNotSupported = "setting generation only support linux platform.";
 
-function generateSettings(testWorkspace: string, testNoteDirectory: string) {
-	let content = `{
-  "workspaceNotes.noteRepoPath": "${testNoteDirectory}",
-}
-`;
-	let settingFile = path.join(testWorkspace, ".vscode", "settings.json");
-	fs.ensureFile(settingFile).then(() => {
-		fs.writeFile(settingFile, content).catch(() => {
-			throw settingGenerationFailed;
+function generateSettings() {
+	const generationScript = path.resolve(__dirname, '../../test-fixtures/generate-fixtures.sh');
+	if (os.platform() === 'linux') {
+		exec(generationScript, (err, stdout, stderr) => {
+			if (err) {
+				throw settingGenerationFailed;
+			}
 		});
-	});
+	} else {
+		throw generationNotSupported;
+	}
 }
 
 
@@ -30,9 +32,8 @@ async function main() {
 
 		// The path to test workspace
 		const testWorkspace = path.resolve(__dirname, '../../test-fixtures/workspace');
-		const testNoteDirectory = path.resolve(__dirname, '../../test-fixtures/notes');
 
-		generateSettings(testWorkspace, testNoteDirectory);
+		generateSettings();
 
 		// Download VS Code, unzip it and run the integration test
 		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: [testWorkspace] });
