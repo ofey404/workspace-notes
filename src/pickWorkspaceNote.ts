@@ -6,7 +6,7 @@ import { hasWorkspaceTag } from "./utils/tag";
 
 function collectWorkspaceNote() {
   const filter = new Filter((item) => {
-    return !item.stats.isDirectory() && hasWorkspaceTag(item.path);
+    return hasWorkspaceTag(item.path);
   });
   return getMarkdown([filter]);
 }

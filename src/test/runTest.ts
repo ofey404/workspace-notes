@@ -9,11 +9,7 @@ const generationNotSupported = "setting generation only support linux platform."
 export function generateFixtureSettings() {
 	const generationScript = path.resolve(__dirname, '../../test-fixtures/generate-fixtures.sh');
 	if (os.platform() === 'linux') {
-		exec(generationScript, (err, stdout, stderr) => {
-			if (err) {
-				throw settingGenerationFailed;
-			}
-		});
+		exec(generationScript);
 	} else {
 		throw generationNotSupported;
 	}

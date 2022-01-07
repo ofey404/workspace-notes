@@ -72,9 +72,9 @@ export function inNoteRepo(path: string) {
   return havePrefix(path, repoPath());
 }
 
-export function getMarkdown(filters?: internal.Transform[]) {
+export function getMarkdown(filters?: internal.Transform[]): Promise<Array<Item>> {
   const markdown = new Filter((item) => {
-    return path.extname(item.path) === ".md";
+    return path.extname(item.path) === ".md" && !item.stats.isDirectory();
   });
   let allFilters = [markdown];
   if (filters !== undefined) {

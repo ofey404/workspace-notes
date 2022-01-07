@@ -19,10 +19,15 @@ suite('utils/config Test Suite', () => {
 	});
 
 	test('ignorePattern() test', () => {
+		let pattern = ignorePattern();
+		let expected: RegExp;
 		if (os.platform() === "win32") {
-			assert.notStrictEqual(ignorePattern(), /(.*\\\..*|^\..*)/);
+			expected = /(.*\\\..*|^\..*)/;
 		} else {
-			assert.notStrictEqual(ignorePattern(), /(.*\/\..*|^\..*)/);
+			expected = /(.*\/\..*|^\..*)/;
 		}
+
+		assert.strictEqual(typeof(pattern), typeof(expected));
+		assert.strictEqual(pattern.toString(), expected.toString());
 	});
 });
