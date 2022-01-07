@@ -5,80 +5,80 @@ import * as internal from "stream";
 import { ignorePattern, repoPath } from "./config";
 
 export class Item implements klaw.Item {
-  path: string;
-  stats: fs.Stats;
-  constructor(k: klaw.Item) {
-    this.path = k.path;
-    this.stats = k.stats;
-  }
-  relativePath() {
-    return removePrefix(this.path, repoPath());
-  }
+    path: string;
+    stats: fs.Stats;
+    constructor(k: klaw.Item) {
+        this.path = k.path;
+        this.stats = k.stats;
+    }
+    relativePath() {
+        return removePrefix(this.path, repoPath());
+    }
 }
 
 function getItemsWithoutIgnore(
-  filters: internal.Transform[]
+    filters: internal.Transform[]
 ): Promise<Array<Item>> {
-  return new Promise((resolve, reject) => {
-    let files: Item[] = [];
+    return new Promise((resolve, reject) => {
+        let files: Item[] = [];
 
-    let target = klaw(repoPath());
+        let target = klaw(repoPath());
 
-    for (var t of filters) {
-      target = target.pipe(t);
-    }
+        for (var t of filters) {
+            target = target.pipe(t);
+        }
 
-    target
-      .on("data", (item) => files.push(new Item(item)))
-      .on("error", reject)
-      .on("end", () => {
-        resolve(files);
-      });
-  });
+        target
+            .on("data", (item) => files.push(new Item(item)))
+            .on("error", reject)
+            .on("end", () => {
+                resolve(files);
+            });
+    });
 }
 
 export class Filter extends internal.Stream.Transform {
-  constructor(good: (item: Item) => Boolean) {
-    super({
-      objectMode: true,
-      transform: function (item, enc, next) {
-        if (good(item)) {
-          this.push(item);
-        }
-        next();
-      },
-    });
-  }
+    constructor(good: (item: Item) => Boolean) {
+        super({
+            objectMode: true,
+            transform: function (item, enc, next) {
+                if (good(item)) {
+                    this.push(item);
+                }
+                next();
+            },
+        });
+    }
 }
 
 function ignoreInConfig() {
-  return new Filter((item) => !ignorePattern().test(item.path));
+    return new Filter((item) => !ignorePattern().test(item.path));
 }
 
 export function getItems(filters: internal.Transform[]): Promise<Array<Item>> {
-  const basic = ignoreInConfig();
-  return getItemsWithoutIgnore([basic, ...filters.slice()]);
+    const basic = ignoreInConfig();
+    return getItemsWithoutIgnore([basic, ...filters.slice()]);
 }
 
 function removePrefix(path: string, prefix: string) {
-  return path.slice(prefix.length + 1, path.length);
+    return path.slice(prefix.length + 1, path.length);
 }
 
 function havePrefix(path: string, prefix: string) {
-  return path.slice(0, prefix.length) === prefix;
+    return path.slice(0, prefix.length) === prefix;
 }
 
 export function inNoteRepo(path: string) {
-  return havePrefix(path, repoPath());
+    return havePrefix(path, repoPath());
 }
 
 export function getMarkdown(filters?: internal.Transform[]): Promise<Array<Item>> {
-  const markdown = new Filter((item) => {
-    return path.extname(item.path) === ".md" && !item.stats.isDirectory();
-  });
-  let allFilters = [markdown];
-  if (filters !== undefined) {
-    allFilters.push(...filters);
-  }
-  return getItems(allFilters);
+    const markdown = new Filter((item) => {
+        return path.extname(item.path) === ".md" && !item.stats.isDirectory();
+    });
+    let allFilters = [markdown];
+    if (filters !== undefined) {
+        allFilters.push(...filters);
+    }
+    return getItems(allFilters);
 }
