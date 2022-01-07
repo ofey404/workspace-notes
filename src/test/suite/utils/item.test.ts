@@ -15,9 +15,7 @@ suite('utils/item Test Suite', () => {
     vscode.window.showInformationMessage('Start item tests.');
 
     function stringArrayStrictEqual(actual: Array<string>, expected: Array<string>) {
-        if (actual.length !== expected.length) {
-            assert.fail();
-        }
+        assert.strictEqual(actual.length, expected.length);
         for (let i=0; i<expected.length; i++) {
             assert.strictEqual(actual[i], expected[i]);
         }
@@ -25,14 +23,9 @@ suite('utils/item Test Suite', () => {
 
     generateFixtureSettings();
 
-    test('class Item test', () => {
-    });
-
-    test('class Filter test', () => {
-    });
-
     test('getItems() test', async () => {
         let expected = toRepoPath([
+            ".",
             "./yes.md",
             "./no.md",
             "./notfile.md",
