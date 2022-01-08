@@ -1,16 +1,19 @@
 import * as assert from 'assert';
+import { beforeEach } from 'mocha';
 import * as os from "os";
 import * as path from 'path';
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import { ignorePattern, repoPath } from '../../../utils/config';
-import { generateFixtureSettings } from '../../runTest';
+import { resetFixture } from '../lib';
 
 suite('utils/config Test Suite', () => {
     vscode.window.showInformationMessage('Start config tests.');
 
-    generateFixtureSettings();
+    beforeEach(() => {
+        resetFixture();
+    });
 
     test('repoPath() test', () => {
         let p = repoPath();

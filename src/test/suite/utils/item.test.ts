@@ -1,27 +1,19 @@
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as assert from 'assert';
+import { beforeEach } from 'mocha';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { repoPath } from '../../../utils/config';
 import { Filter, getItems, getMarkdown, inNoteRepo } from '../../../utils/item';
-import { generateFixtureSettings } from '../../runTest';
-
-function toRepoPath(relativePath: Array<string>) {
-    return relativePath.map(realtivePath => path.join(repoPath(), realtivePath)).sort();
-}
+import { resetFixture, stringArrayStrictEqual, toRepoPath } from '../lib';
 
 suite('utils/item Test Suite', () => {
     vscode.window.showInformationMessage('Start item tests.');
 
-    function stringArrayStrictEqual(actual: Array<string>, expected: Array<string>) {
-        assert.strictEqual(actual.length, expected.length);
-        for (let i=0; i<expected.length; i++) {
-            assert.strictEqual(actual[i], expected[i]);
-        }
-    }
-
-    generateFixtureSettings();
+    beforeEach(() => {
+        resetFixture();
+    });
 
     test('getItems() test', async () => {
         let expected = toRepoPath([

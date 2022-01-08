@@ -1,19 +1,7 @@
 import { runTests } from '@vscode/test-electron';
 import { exec } from 'child_process';
-import * as os from "os";
 import * as path from 'path';
-
-const settingGenerationFailed = "setting generation failed.";
-const generationNotSupported = "setting generation only support linux platform.";
-
-export function generateFixtureSettings() {
-    const generationScript = path.resolve(__dirname, '../../test-fixtures/generate-fixtures.sh');
-    if (os.platform() === 'linux') {
-        exec(generationScript);
-    } else {
-        throw generationNotSupported;
-    }
-}
+import assert = require('assert');
 
 
 async function main() {
